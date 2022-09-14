@@ -10,6 +10,7 @@
     "@types/node": "^16.11.57",
     "@types/react": "^18.0.18",
     "@types/react-dom": "^18.0.6",
+    "immutable": "^4.1.0",
     "primeicons": "^5.0.0",
     "primereact": "^8.4.0",
     "react": "^18.2.0",

@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react';
 import { Tree, TreeDragDropParams } from 'primereact/tree';
-import { Button } from 'primereact/button';
 import { EnslaverAlias, EnslaverContribution, EnslaverContributionType, EnslaverIdentity } from '../models/EnslaverContribution';
 import TreeNode from 'primereact/treenode';
 
@@ -11,7 +9,7 @@ interface IEnslaverVoyageConnectionsProps {
 
 const EnslaverVoyageConnections = (props: IEnslaverVoyageConnectionsProps) => {
     const contrib = props.contribution;
-    const make_alias_nodes: (alias: EnslaverAlias) => TreeNode[] = alias =>
+    const makeAliasNodes: (alias: EnslaverAlias) => TreeNode[] = alias =>
         alias.voyages.map(
             v => ({
                 key: `voyage_${v.id}`,
@@ -21,13 +19,13 @@ const EnslaverVoyageConnections = (props: IEnslaverVoyageConnectionsProps) => {
                 droppable: false
             })
         );
-    const make_identity_nodes: (identity: EnslaverIdentity) => TreeNode[] = identity =>
-        identity.other_aliases.map(
+    const makeIdentityNodes: (identity: EnslaverIdentity) => TreeNode[] = identity =>
+        identity.aliases.map(
             alias => ({
                 key: `alias_${alias.id}`,
                 label: alias.alias,
                 data: alias,
-                children: make_alias_nodes(alias),
+                children: makeAliasNodes(alias),
                 draggable: contrib.type === EnslaverContributionType.Split,
                 droppable: true,
                 expanded: true,
@@ -38,11 +36,11 @@ const EnslaverVoyageConnections = (props: IEnslaverVoyageConnectionsProps) => {
         // This is the only case where we need to explicitly show the identities
         // (two of them).
         for (const eid of contrib.identities) {
-            const enode : TreeNode = {
+            const enode: TreeNode = {
                 key: `identity_${eid.id}`,
-                label: eid.primary_alias,
+                label: eid.personal_data.primary_alias,
                 data: eid,
-                children: make_identity_nodes(eid),
+                children: makeIdentityNodes(eid),
                 droppable: true,
                 expanded: true
             };

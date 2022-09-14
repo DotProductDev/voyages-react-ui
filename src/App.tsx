@@ -14,9 +14,7 @@ function App() {
         <p>
           Demo page
         </p>
-        if (contrib !== null) {
-          <EnslaverVoyageConnections contribution={contrib!} onUpdate={setContrib} />
-        }
+        (contrib === null || <EnslaverVoyageConnections contribution={contrib!} onUpdate={setContrib} />)
       </header>
     </div>
   );
