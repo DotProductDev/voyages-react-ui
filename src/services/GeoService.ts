@@ -47,8 +47,8 @@ export class GeoService implements IGeoService {
     }
 }
 
-export const maybeGetLocation = (geoService: IGeoService, id: number | null) => {
-    if (id === null) {
+export const maybeGetLocation = (geoService: IGeoService, id: number | null | undefined) => {
+    if (!id) {
         return Promise.resolve<MapLocation | null>(null);
     }
     return geoService.getLocation(id);

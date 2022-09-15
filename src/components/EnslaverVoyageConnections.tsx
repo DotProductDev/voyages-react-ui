@@ -1,4 +1,4 @@
-import { Tree, TreeDragDropParams } from 'primereact/tree';
+import { Tree, TreeDragDropParams, TreeNodeTemplateOptions } from 'primereact/tree';
 import { EnslaverAlias, EnslaverContribution, EnslaverContributionType, EnslaverIdentity } from '../models/EnslaverContribution';
 import TreeNode from 'primereact/treenode';
 
@@ -9,7 +9,7 @@ interface IEnslaverVoyageConnectionsProps {
 
 const EnslaverVoyageConnections = (props: IEnslaverVoyageConnectionsProps) => {
     const contrib = props.contribution;
-    const makeAliasNodes: (alias: EnslaverAlias) => TreeNode[] = alias =>
+    const makeAliasNodes = (alias: EnslaverAlias) =>
         alias.voyages.map(
             v => ({
                 key: `voyage_${v.id}`,
@@ -17,18 +17,18 @@ const EnslaverVoyageConnections = (props: IEnslaverVoyageConnectionsProps) => {
                 data: v,
                 draggable: true,
                 droppable: false
-            })
+            }) as TreeNode
         );
     const makeIdentityNodes: (identity: EnslaverIdentity) => TreeNode[] = identity =>
         identity.aliases.map(
             alias => ({
                 key: `alias_${alias.id}`,
                 label: alias.alias,
-                data: alias,
+                data: { alias, identity },
                 children: makeAliasNodes(alias),
                 draggable: contrib.type === EnslaverContributionType.Split,
                 droppable: true,
-                expanded: true,
+                //expanded: true,
             })
         );
     const nodes = [];
@@ -38,12 +38,20 @@ const EnslaverVoyageConnections = (props: IEnslaverVoyageConnectionsProps) => {
         for (const eid of contrib.identities) {
             const enode: TreeNode = {
                 key: `identity_${eid.id}`,
-                label: eid.personal_data.primary_alias,
+                label: eid.personal_data.principal_alias,
                 data: eid,
                 children: makeIdentityNodes(eid),
                 droppable: true,
-                expanded: true
+                //expanded: true
             };
+            nodes.push(enode);
+        }
+    } else {
+        if (contrib.identities.length !== 1) {
+            throw Error("Invalid contrib")
+        }
+        const eid = contrib.identities[0];
+        for (const enode of makeIdentityNodes(eid)) {
             nodes.push(enode);
         }
     }
@@ -62,7 +70,23 @@ const EnslaverVoyageConnections = (props: IEnslaverVoyageConnectionsProps) => {
     // - Keep state for selection, ensure only allowed multiple selection of voyages.
     // - Button for adding a new alias
     // - Button for deleting an alias.
-    return <Tree value={nodes} onDragDrop={handleDragDrop} selectionMode="multiple" />
+    const nodeTemplate = (node: TreeNode, options: TreeNodeTemplateOptions) => {
+        let label = node.label as any;
+        const maybeParentIdentity = node.data?.identity as EnslaverIdentity|null;
+        if (maybeParentIdentity && maybeParentIdentity.personal_data.principal_alias === node.label) {
+            label = <b>{label}</b>
+        }
+        return (
+            <span className={options.className}>
+                {label}
+            </span>
+        )
+    };
+    return (
+        <div className="card">
+            <Tree value={nodes} nodeTemplate={nodeTemplate} /*onDragDrop={handleDragDrop}*/ />
+        </div>
+    );
 }
 
 export default EnslaverVoyageConnections;
