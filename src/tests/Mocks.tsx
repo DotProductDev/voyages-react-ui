@@ -2,8 +2,9 @@ import { LanguageCode, LanguageCodes, LocalizedString, MapLocation } from "../mo
 import { EnslaverContributionType, EnslaverContribution } from "../models/EnslaverContribution";
 import { IEnslaversService, parseEnslaverContribution } from "../services/EnslaversService"
 import { IGeoService } from "../services/GeoService"
-import { ILocalizationService } from "../services/LocalizationService";
+import { ILocalizationService, parseLocalization } from "../services/LocalizationService";
 import { ServiceContext } from "../services/ServiceContext";
+import uiLocalizationData from '../ui_localization.json'
 
 const mockEditEnslaverContribData = {
     "type": "edit",
@@ -1044,7 +1045,7 @@ const mockEditEnslaverContribData = {
 const makeLocalizedString = (s: string) =>
     new LocalizedString(
         s,
-        new Map<LanguageCode, string>(LanguageCodes.map(lang => [lang, `${lang} [${s}]`]))
+        new Map<LanguageCode, string>(LanguageCodes.map(lang => [lang, `mock_${lang} [${s}]`]))
     );
 
 export class MockEnslaversService implements IEnslaversService {
@@ -1076,7 +1077,9 @@ export class MockGeoService implements IGeoService {
 }
 
 export class MockLocalizationService implements ILocalizationService {
-    get = (key: string) => makeLocalizedString(key);
+    _data = parseLocalization(uiLocalizationData);
+
+    get = (key: string) => this._data.get(key) ?? makeLocalizedString(key);
     fetchGroup = (group: string) => Promise.resolve(3);
 }
 

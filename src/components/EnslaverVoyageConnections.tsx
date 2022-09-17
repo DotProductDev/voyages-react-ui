@@ -84,7 +84,7 @@ const EnslaverVoyageConnections = (props: IEnslaverVoyageConnectionsProps) => {
     };
     return (
         <div className="card">
-            <Tree value={nodes} nodeTemplate={nodeTemplate} /*onDragDrop={handleDragDrop}*/ />
+            <Tree value={nodes} nodeTemplate={nodeTemplate} onDragDrop={handleDragDrop} />
         </div>
     );
 }

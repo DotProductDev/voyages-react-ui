@@ -1,0 +1,21 @@
+{
+    "ui_localization_language_menu_selection_header": {
+        "en": "Language",
+        "pt": "Idioma",
+        "es": "Idioma"
+    },
+    "ui_localization_language_menu_item_en": {
+        "en": "English"
+    },
+    "ui_localization_language_menu_item_pt": {
+        "en": "Português"
+    },
+    "ui_localization_language_menu_item_es": {
+        "en": "Español"
+    },
+    "ui_localization_enslaver_alias_tree_header": {
+        "en": "Enslaver Aliases and Voyage Connections",
+        "pt": "Pseudônimos de Escravocratas e Conexões com Viagens",
+        "es": "transl to Spanish"
+    }
+}
